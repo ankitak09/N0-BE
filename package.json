@@ -1,0 +1,37 @@
+{
+  "name": "n0-platform-be",
+  "version": "0.1.0",
+  "description": "N0 platform multi-microservice backend scaffold",
+  "private": true,
+  "workspaces": [
+    "services/*"
+  ],
+  "scripts": {
+    "prepare": "husky",
+    "build": "turbo build",
+    "dev": "turbo dev --parallel",
+    "test": "turbo test",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "kafka:up": "docker compose up -d kafka",
+    "infra:up": "docker compose up -d postgres kafka",
+    "new:service": "bash scripts/new-service.sh",
+    "dev:gateway": "turbo dev --filter=n0-api-gateway",
+    "dev:example": "turbo dev --filter=n0-example-service",
+    "ports": "cat docs/port-registry.md"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "turbo": "^2.5.8"
+  },
+  "lint-staged": {
+    "services/**/*.ts": [
+      "bash -c 'turbo run build --filter=./services/* --continue'"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "npm@10.9.0"
+}

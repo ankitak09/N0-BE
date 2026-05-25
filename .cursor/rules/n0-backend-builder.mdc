@@ -1,0 +1,15 @@
+---
+description: Build microservice APIs from contracts in N0-platform-be
+globs:
+  - N0-platform-be/**
+  - "**/*ARTIFACT*"
+  - "**/*CONTRACT*"
+---
+
+When implementing backend modules from API contracts in this monorepo, read:
+
+`NO-auth-api/.cursor/skills/n0-backend-builder/SKILL.md`
+
+(if not present, use `N0-platform-be` service README and `docs/adding-a-service.md`)
+
+Do not invent endpoints or schema fields not in the cited contract.
