@@ -19,6 +19,9 @@
     "dev:gateway": "turbo dev --filter=n0-api-gateway",
     "dev:example": "turbo dev --filter=n0-example-service",
     "dev:auth": "turbo dev --filter=n0-auth-service",
+    "migration:auth": "bash scripts/run-service-migration.sh auth run",
+    "migration:auth:revert": "bash scripts/run-service-migration.sh auth revert",
+    "migration:auth:show": "bash scripts/run-service-migration.sh auth show",
     "ports": "cat docs/port-registry.md"
   },
   "devDependencies": {

@@ -3,7 +3,6 @@ import { ConfigService } from "@nestjs/config";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
-import { ErrorCode } from "../common/errors";
 import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
 
 export type AuthenticatedRequest = Request & {
@@ -34,8 +33,7 @@ export class JwtAuthGuard implements CanActivate {
 
     if (!header?.startsWith("Bearer ")) {
       throw new UnauthorizedException({
-        code: ErrorCode.UNAUTHORIZED,
-        message: "Bearer token required",
+        message: "Unauthenticated",
       });
     }
 
@@ -53,8 +51,7 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     } catch {
       throw new UnauthorizedException({
-        code: ErrorCode.UNAUTHORIZED,
-        message: "Invalid or expired access token",
+        message: "Unauthenticated",
       });
     }
   }

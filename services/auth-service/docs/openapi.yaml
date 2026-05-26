@@ -3,23 +3,253 @@ paths:
   /api/health:
     get:
       operationId: HealthController_health
-      summary: Liveness check
       parameters: []
       responses:
         "200":
           description: Service is running
-      tags:
+      summary: Liveness check
+      tags: &a1
         - Health
   /api/ready:
     get:
       operationId: HealthController_ready
-      summary: Readiness check
       parameters: []
       responses:
         "200":
           description: Service is ready to accept traffic
-      tags:
-        - Health
+      summary: Readiness check
+      tags: *a1
+  /api/auth/check-email:
+    post:
+      operationId: AuthRoutesController_checkEmail
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CheckEmailDto"
+      responses:
+        "201":
+          description: Success
+      tags: &a2
+        - auth
+  /api/auth/login:
+    post:
+      operationId: AuthRoutesController_login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginDto"
+      responses:
+        "201":
+          description: Success
+      tags: *a2
+  /api/auth/signup:
+    post:
+      operationId: AuthRoutesController_signup
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignupDto"
+      responses:
+        "201":
+          description: Success
+      tags: *a2
+  /api/auth/verify-human:
+    post:
+      operationId: AuthRoutesController_verifyHuman
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyHumanDto"
+      responses:
+        "201":
+          description: Success
+      tags: *a2
+  /api/auth/email/verification/send:
+    post:
+      operationId: AuthRoutesController_sendVerification
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailDto"
+      responses:
+        "201":
+          description: Success
+      tags: *a2
+  /api/auth/email/verification/confirm:
+    post:
+      operationId: AuthRoutesController_confirmVerification
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfirmEmailDto"
+      responses:
+        "201":
+          description: Success
+      tags: *a2
+  /api/auth/session:
+    get:
+      operationId: AuthRoutesController_getSession
+      parameters: []
+      responses:
+        "200":
+          description: Success
+      security:
+        - bearer: []
+      tags: *a2
+  /api/auth/session/refresh:
+    post:
+      operationId: AuthRoutesController_refreshSession
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshSessionDto"
+      responses:
+        "201":
+          description: Success
+      tags: *a2
+  /api/auth/logout:
+    post:
+      operationId: AuthRoutesController_logout
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshSessionDto"
+      responses:
+        "201":
+          description: Success
+      tags: *a2
+  /api/auth/password/forgot:
+    post:
+      operationId: AuthRoutesController_forgotPassword
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailDto"
+      responses:
+        "201":
+          description: Success
+      tags: *a2
+  /api/auth/password/reset:
+    post:
+      operationId: AuthRoutesController_resetPassword
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordDto"
+      responses:
+        "201":
+          description: Success
+      tags: *a2
+  /api/auth/password/change:
+    patch:
+      operationId: AuthRoutesController_changePassword
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordDto"
+      responses:
+        "200":
+          description: Success
+      security:
+        - bearer: []
+      tags: *a2
+  /api/auth/oauth/{provider}/start:
+    get:
+      operationId: AuthRoutesController_oauthStart
+      parameters:
+        - name: provider
+          required: true
+          in: path
+          schema:
+            enum:
+              - google
+              - github
+              - apple
+            type: string
+        - name: redirectTo
+          required: false
+          in: query
+          schema:
+            example: /dashboard
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags: *a2
+  /api/auth/oauth/{provider}/callback:
+    get:
+      operationId: AuthRoutesController_oauthCallback
+      parameters:
+        - name: provider
+          required: true
+          in: path
+          schema:
+            enum:
+              - google
+              - github
+              - apple
+            type: string
+        - name: code
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: state
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags: *a2
+  /api/auth/oauth/exchange:
+    post:
+      operationId: AuthRoutesController_oauthExchange
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OAuthExchangeDto"
+      responses:
+        "201":
+          description: Success
+      tags: *a2
 info:
   title: n0-auth-service
   description: N0 auth API
@@ -34,4 +264,114 @@ components:
       scheme: bearer
       bearerFormat: JWT
       type: http
-  schemas: {}
+  schemas:
+    CheckEmailDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: rahul@example.com
+      required:
+        - email
+    LoginDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: rahul@example.com
+        password:
+          type: string
+          example: Password123
+        rememberMe:
+          type: boolean
+          example: true
+          default: true
+      required:
+        - email
+        - password
+    SignupDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: rahul@example.com
+        password:
+          type: string
+          example: Password123
+          minLength: 8
+        name:
+          type: string
+          example: Rahul Mukati
+        turnstileToken:
+          type: string
+          example: cloudflare_turnstile_token
+      required:
+        - email
+        - password
+        - turnstileToken
+    VerifyHumanDto:
+      type: object
+      properties:
+        turnstileToken:
+          type: string
+          example: cloudflare_turnstile_token
+      required:
+        - turnstileToken
+    EmailDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: rahul@example.com
+      required:
+        - email
+    ConfirmEmailDto:
+      type: object
+      properties:
+        token:
+          type: string
+          example: email_verification_token
+      required:
+        - token
+    RefreshSessionDto:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          example: refresh_token_here
+      required:
+        - refreshToken
+    ResetPasswordDto:
+      type: object
+      properties:
+        token:
+          type: string
+          example: password_reset_token
+        password:
+          type: string
+          example: NewPassword123
+          minLength: 8
+      required:
+        - token
+        - password
+    ChangePasswordDto:
+      type: object
+      properties:
+        currentPassword:
+          type: string
+          example: OldPassword123
+        newPassword:
+          type: string
+          example: NewPassword123
+          minLength: 8
+      required:
+        - currentPassword
+        - newPassword
+    OAuthExchangeDto:
+      type: object
+      properties:
+        code:
+          type: string
+          example: oauth_state_or_code
+      required:
+        - code

@@ -21,6 +21,48 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<RequestWithId>();
     const requestId = request.requestId;
 
+    const path = request.path ?? request.url.split("?")[0];
+    const isAuthApi = path.startsWith("/api/auth");
+
+    if (isAuthApi && exception instanceof HttpException) {
+      const status = exception.getStatus();
+      const body = exception.getResponse();
+
+      if (typeof body === "object" && body !== null) {
+        const record = body as Record<string, unknown>;
+
+        const message =
+          typeof record.message === "string"
+            ? record.message
+            : Array.isArray(record.message)
+              ? "Validation failed"
+              : "Request failed";
+
+        if (!("code" in record) || status === HttpStatus.UNAUTHORIZED) {
+          if (record.errors && typeof record.errors === "object") {
+            response.status(status).json({
+              success: false,
+              message,
+              errors: record.errors as Record<string, string>,
+            });
+            return;
+          }
+
+          if (Array.isArray(record.message)) {
+            response.status(status).json({
+              success: false,
+              message: "Validation failed",
+              errors: { form: (record.message as string[]).join("; ") },
+            });
+            return;
+          }
+
+          response.status(status).json({ success: false, message });
+          return;
+        }
+      }
+    }
+
     const { status, code, message, details } = this.normalize(exception);
 
     if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {

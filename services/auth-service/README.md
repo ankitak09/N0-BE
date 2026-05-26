@@ -27,6 +27,29 @@ npm run start:dev
 
 ## Migrations
 
+Creates tables: `users`, `refresh_tokens`, `email_verification_tokens`, `password_reset_tokens`, `oauth_states`.
+
+From **monorepo root** (`N0-BE/`):
+
+```bash
+npm run migration:auth
+```
+
+From this service directory:
+
+```bash
+npm run migration:run
+```
+
+Verify tables:
+
+```bash
+psql "$DATABASE_URL" -c "\\dt users"
+psql "$DATABASE_URL" -c "\\dt refresh_tokens"
+```
+
+After entity changes:
+
 ```bash
 npm run migration:generate
 npm run migration:run

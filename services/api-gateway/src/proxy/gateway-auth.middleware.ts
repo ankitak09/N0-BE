@@ -11,17 +11,33 @@ type GatewayRequest = RequestWithId & {
   email?: string;
 };
 
-/** Routes that bypass JWT at the gateway (auth signup + platform health). */
+/** Routes that bypass JWT at the gateway (platform health + public auth). */
 const PUBLIC_ROUTES: Array<{ method: string; pattern: RegExp }> = [
   { method: "GET", pattern: /^\/api\/health$/ },
   { method: "GET", pattern: /^\/api\/ready$/ },
-  { method: "POST", pattern: /^\/api\/auth\/signup\/request$/ },
-  { method: "POST", pattern: /^\/api\/auth\/signup\/complete$/ },
-  { method: "POST", pattern: /^\/api\/auth\/verify-email$/ },
+  { method: "GET", pattern: /^\/api\/auth\/oauth\/[^/]+\/start$/ },
+  { method: "GET", pattern: /^\/api\/auth\/oauth\/[^/]+\/callback$/ },
 ];
 
+const PUBLIC_AUTH_POST = new Set([
+  "/api/auth/check-email",
+  "/api/auth/login",
+  "/api/auth/signup",
+  "/api/auth/verify-human",
+  "/api/auth/email/verification/send",
+  "/api/auth/email/verification/confirm",
+  "/api/auth/session/refresh",
+  "/api/auth/logout",
+  "/api/auth/password/forgot",
+  "/api/auth/password/reset",
+  "/api/auth/oauth/exchange",
+]);
+
 function isPublicRoute(method: string, path: string): boolean {
-  return PUBLIC_ROUTES.some((r) => r.method === method && r.pattern.test(path));
+  if (PUBLIC_ROUTES.some((r) => r.method === method && r.pattern.test(path))) {
+    return true;
+  }
+  return method === "POST" && PUBLIC_AUTH_POST.has(path);
 }
 
 export function registerGatewayAuth(app: INestApplication) {
