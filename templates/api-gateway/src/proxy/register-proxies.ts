@@ -1,6 +1,7 @@
 import { INestApplication, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { createProxyMiddleware } from "http-proxy-middleware";
+import { ErrorCode } from "../common/errors";
 import { RequestWithId } from "../middleware/request-id.middleware";
 import { PROXY_ROUTES } from "./proxy.routes";
 
@@ -42,7 +43,7 @@ export function registerProxies(app: INestApplication) {
                 JSON.stringify({
                   success: false,
                   error: {
-                    code: "SERVICE_UNAVAILABLE",
+                    code: ErrorCode.SERVICE_UNAVAILABLE,
                     message: `Upstream unavailable for ${route.path}`,
                   },
                 }),

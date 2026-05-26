@@ -1,0 +1,57 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/health": {
+      "get": {
+        "operationId": "HealthController_health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Service is running"
+          }
+        },
+        "summary": "Liveness check",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/api/ready": {
+      "get": {
+        "operationId": "HealthController_ready",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Service is ready to accept traffic"
+          }
+        },
+        "summary": "Readiness check",
+        "tags": [
+          "Health"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "n0-api-gateway",
+    "description": "N0 gateway API",
+    "version": "1.0"
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "http://localhost:3001",
+      "description": "Local development"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {}
+  }
+}

@@ -24,7 +24,7 @@ Handlers may return a plain object; `ApiResponseInterceptor` wraps it automatica
 {
   "success": false,
   "error": {
-    "code": "VALIDATION_ERROR",
+    "code": 400,
     "message": "Human-readable summary",
     "details": []
   },
@@ -35,20 +35,22 @@ Handlers may return a plain object; `ApiResponseInterceptor` wraps it automatica
 }
 ```
 
-### Stable `error.code` values
+### `error.code` values (HTTP status numbers)
 
-| Code | Typical HTTP |
-|------|----------------|
-| `VALIDATION_ERROR` | 400 |
-| `UNAUTHORIZED` | 401 |
-| `FORBIDDEN` | 403 |
-| `NOT_FOUND` | 404 |
-| `CONFLICT` | 409 |
-| `RATE_LIMITED` | 429 |
-| `SERVICE_UNAVAILABLE` | 503 |
-| `INTERNAL_ERROR` | 500 |
+`error.code` is a numeric HTTP status (same family as the response status). Use `ErrorCode` constants in services.
 
-Use these codes in the FE for branching (retry, logout, toast), not raw status text.
+| Code | Meaning |
+|------|---------|
+| `400` | Validation / bad request (`ErrorCode.VALIDATION_ERROR`, `ErrorCode.BAD_REQUEST`) |
+| `401` | Unauthorized |
+| `403` | Forbidden |
+| `404` | Not found |
+| `409` | Conflict |
+| `429` | Rate limited |
+| `500` | Internal error |
+| `503` | Service unavailable |
+
+Branch in the FE on `error.code` (e.g. `401` → logout), not raw status text.
 
 ## Throwing errors in services
 

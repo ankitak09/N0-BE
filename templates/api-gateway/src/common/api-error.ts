@@ -2,7 +2,7 @@ import { ApiMeta } from "./api-response";
 
 /** Standard error envelope returned to the Next.js FE. */
 export interface ApiErrorBody {
-  code: string;
+  code: number;
   message: string;
   details?: unknown;
 }
@@ -14,7 +14,7 @@ export interface ApiErrorResponse {
 }
 
 export function apiError(
-  code: string,
+  code: number,
   message: string,
   requestId?: string,
   details?: unknown,

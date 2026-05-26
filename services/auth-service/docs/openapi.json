@@ -1,0 +1,53 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/health": {
+      "get": {
+        "operationId": "HealthController_health",
+        "summary": "Liveness check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Service is running"
+          }
+        },
+        "tags": ["Health"]
+      }
+    },
+    "/api/ready": {
+      "get": {
+        "operationId": "HealthController_ready",
+        "summary": "Readiness check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Service is ready to accept traffic"
+          }
+        },
+        "tags": ["Health"]
+      }
+    }
+  },
+  "info": {
+    "title": "n0-auth-service",
+    "description": "N0 auth API",
+    "version": "1.0"
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "description": "Local development"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {}
+  }
+}

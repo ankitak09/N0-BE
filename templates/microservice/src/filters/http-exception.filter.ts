@@ -35,7 +35,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
   private normalize(exception: unknown): {
     status: number;
-    code: string;
+    code: number;
     message: string;
     details?: unknown;
   } {
@@ -46,7 +46,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       if (typeof body === "object" && body !== null) {
         const record = body as Record<string, unknown>;
         const code =
-          typeof record.code === "string"
+          typeof record.code === "number"
             ? record.code
             : this.statusToCode(status);
         const message =
@@ -74,7 +74,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     };
   }
 
-  private statusToCode(status: number): string {
+  private statusToCode(status: number): number {
     switch (status) {
       case HttpStatus.BAD_REQUEST:
         return ErrorCode.BAD_REQUEST;

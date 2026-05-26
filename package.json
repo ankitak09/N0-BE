@@ -18,6 +18,7 @@
     "new:service": "bash scripts/new-service.sh",
     "dev:gateway": "turbo dev --filter=n0-api-gateway",
     "dev:example": "turbo dev --filter=n0-example-service",
+    "dev:auth": "turbo dev --filter=n0-auth-service",
     "ports": "cat docs/port-registry.md"
   },
   "devDependencies": {

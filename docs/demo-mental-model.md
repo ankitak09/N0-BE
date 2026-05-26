@@ -216,7 +216,7 @@ See [fe-api-contract.md](fe-api-contract.md).
 ```json
 {
   "success": false,
-  "error": { "code": "UNAUTHORIZED", "message": "…" },
+  "error": { "code": 401, "message": "…" },
   "meta": { "requestId": "…", "timestamp": "…" }
 }
 ```

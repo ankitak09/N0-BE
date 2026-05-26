@@ -1,4 +1,4 @@
-import { INestApplication } from "@nestjs/common";
+import { HttpStatus, INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { NextFunction, Response } from "express";
@@ -39,7 +39,7 @@ export function registerGatewayAuth(app: INestApplication) {
     const header = req.headers.authorization;
     if (!header?.startsWith("Bearer ")) {
       return res
-        .status(401)
+        .status(HttpStatus.UNAUTHORIZED)
         .json(apiError(ErrorCode.UNAUTHORIZED, "Bearer token required", req.requestId));
     }
 
@@ -52,7 +52,7 @@ export function registerGatewayAuth(app: INestApplication) {
       return next();
     } catch {
       return res
-        .status(401)
+        .status(HttpStatus.UNAUTHORIZED)
         .json(apiError(ErrorCode.UNAUTHORIZED, "Invalid or expired access token", req.requestId));
     }
   });
