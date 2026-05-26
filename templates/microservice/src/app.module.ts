@@ -6,6 +6,7 @@ import { AuthModule } from "./auth/auth.module";
 import { DatabaseModule } from "./database/database.module";
 import { HealthModule } from "./health/health.module";
 import { KafkaModule } from "./kafka/kafka.module";
+import { __Resources__Module } from "./modules/__resources__/__resources__.module";
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { KafkaModule } from "./kafka/kafka.module";
     DatabaseModule,
     KafkaModule,
     HealthModule,
-    // Import feature modules here, e.g. BillingModule
+    __Resources__Module,
   ],
   providers: [
     {

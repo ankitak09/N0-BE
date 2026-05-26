@@ -1,2 +1,1 @@
-// Export entities here as you add them:
-// export { Example } from "./example.entity";
+export { __Resource__Entity } from "./__resource__.entity";

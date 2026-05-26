@@ -4,14 +4,19 @@
 
 Edit [port-registry.md](port-registry.md) and reserve the next free port (e.g. `4002`).
 
-## 2. Generate from template
+## 2. Generate from template (includes CRUD)
 
 ```bash
-cd N0-platform-be
+cd N0-BE
 npm run new:service -- billing 4002
 ```
 
-Creates `services/billing-service/` from `templates/microservice/`.
+Creates `services/billing-service/` from `templates/microservice/` with:
+
+- Full CRUD at `/api/billings` (entity, DTOs, controller, service, migration)
+- `BillingsModule` registered in `app.module.ts`
+- Gateway route `/api/billings` → `BILLING_SERVICE_URL`
+- Port row in `docs/port-registry.md`
 
 ## 3. Configure environment
 
@@ -24,11 +29,12 @@ npm install
 
 ## 4. Add domain code
 
-1. Define entities in `src/entities/` (match migration SQL).
-2. Register entities in `database/database.module.ts` and `database/data-source.ts`.
-3. Add `src/modules/<feature>/` (module, controller, service, `dto/`).
-4. Import feature module in `app.module.ts`.
-5. Run `npm run migration:generate` when schema changes.
+A **reference CRUD module** is already generated (e.g. `/api/billings` for `billing-service`). See [crud-boilerplate.md](crud-boilerplate.md).
+
+1. Customize or remove `src/modules/<slug>s/` to match your API contract.
+2. Run `npm run migration:run` after first generate.
+3. Copy the generated CRUD module folder to add another resource, or delete it if unused.
+4. Run `npm run migration:generate` when you change entities.
 
 Use Cursor:
 

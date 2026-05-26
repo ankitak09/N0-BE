@@ -1,4 +1,4 @@
-/** Topic naming: n0.<domain>.<event> */
+/** Topic naming: n0.<service-slug>.<entity>.<event> */
 export const KafkaTopics = {
-  EXAMPLE_CREATED: "n0.example.example.created",
+  CREATED: "n0.example.example.created",
 } as const;

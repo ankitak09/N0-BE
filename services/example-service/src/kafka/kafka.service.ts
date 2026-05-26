@@ -20,7 +20,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
 
     const brokers = (this.config.get<string>("KAFKA_BROKERS") ?? "localhost:9092").split(",");
     this.kafka = new Kafka({
-      clientId: this.config.get("KAFKA_CLIENT_ID") ?? "n0-example-service",
+      clientId: this.config.get("KAFKA_CLIENT_ID") ?? "__SERVICE_NAME__",
       brokers,
       logLevel: logLevel.ERROR,
     });

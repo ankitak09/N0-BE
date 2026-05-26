@@ -6,10 +6,10 @@ Production-oriented **multi-microservice** monorepo template for the N0 platform
 
 ```
 N0-platform-be/
-├── docker-compose.yml       # Postgres + Kafka (+ optional service containers)
+├── docker-compose.yml       # Postgres + Kafka (+ optional api-gateway)
 ├── package.json             # Root orchestration scripts
 ├── scripts/
-│   └── new-service.sh       # Generate a new microservice from template
+│   └── new-service.sh       # New microservice + CRUD boilerplate + gateway route
 ├── templates/
 │   ├── microservice/        # Canonical NestJS service template
 │   └── api-gateway/         # Public edge — proxy + JWT + rate limit
@@ -22,6 +22,7 @@ N0-platform-be/
     ├── security.md
     ├── fe-api-contract.md   # Success/error JSON for the FE
     ├── adding-a-service.md
+    ├── crud-boilerplate.md     # Reference CRUD module per service
     ├── running-services.md  # Start all vs one service (Turbo)
     └── port-registry.md
 ```
@@ -34,7 +35,7 @@ N0-platform-be/
 | Framework | NestJS 11 |
 | ORM | TypeORM + PostgreSQL |
 | Events | Kafka (`kafkajs`, optional via `ENABLE_KAFKA`) |
-| API docs | Swagger → `/api/docs` + `docs/openapi.json` |
+| API docs | Swagger → `/api/docs` |
 | Tests | Jest (unit + e2e) |
 | Auth | JWT Bearer only (`JWT_ACCESS_SECRET` shared with auth-service) |
 | Monorepo | npm workspaces + Turborepo + Husky |
@@ -56,9 +57,11 @@ npm install
 npm run dev
 # Or gateway only: npm run dev:gateway
 
-# 4. Create a new internal microservice (e.g. billing on port 4002)
+# 4. Create a new internal microservice (includes CRUD at /api/billings)
 npm run new:service -- billing 4002
 ```
+
+Each `new:service` run generates: NestJS service + **CRUD module** + migration + gateway proxy + port registry entry. See [docs/crud-boilerplate.md](docs/crud-boilerplate.md).
 
 Point the frontend at `http://localhost:3001/api`. Auth/project from `NO-auth-api` must run separately for full proxy flow — see [docs/running-services.md](docs/running-services.md).
 
@@ -80,7 +83,7 @@ See [docs/adding-a-service.md](docs/adding-a-service.md) and use the Cursor skil
 |--------|--------|
 | `npm run db:up` | Start Postgres (`localhost:5434`) |
 | `npm run kafka:up` | Start Kafka (`localhost:9092`) |
-| `npm run new:service -- <slug> <port>` | Scaffold `services/<slug>-service` |
+| `npm run new:service -- <slug> <port>` | Scaffold service + CRUD + gateway route |
 | `npm run dev` | Start **all** `services/*` in parallel (Turbo) |
 | `npm run dev:gateway` | Gateway only (`:3001`) |
 | `npm run dev:example` | Example service only (`:4099`) |

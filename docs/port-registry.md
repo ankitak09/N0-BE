@@ -20,5 +20,6 @@ Reserve ports here before running `npm run new:service`.
 - `SERVICE_NAME` env: `n0-<slug>-service`
 - Kafka client id: `n0-<slug>-service`
 - Topic prefix: `n0.<slug>.<event>` (e.g. `n0.billing.invoice.created`)
+- CRUD routes: `/api/<slug>s` (e.g. `/api/billings`)
 
 Update this file when you claim a port.

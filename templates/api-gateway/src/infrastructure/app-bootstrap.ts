@@ -1,6 +1,5 @@
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Reflector } from "@nestjs/core";
 import { json, urlencoded } from "express";
 import helmet from "helmet";
 import { HttpExceptionFilter } from "../filters/http-exception.filter";
@@ -15,7 +14,6 @@ export interface BootstrapOptions {
 
 export function configureHttpApp(app: INestApplication, options: BootstrapOptions) {
   const config = app.get(ConfigService);
-  const reflector = app.get(Reflector);
 
   app.use(helmet());
   app.use(requestIdMiddleware);
@@ -45,7 +43,7 @@ export function configureHttpApp(app: INestApplication, options: BootstrapOption
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalInterceptors(new ApiResponseInterceptor(reflector));
+  app.useGlobalInterceptors(new ApiResponseInterceptor());
   app.enableShutdownHooks();
 
   const enableSwagger =

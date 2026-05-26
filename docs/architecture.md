@@ -38,7 +38,7 @@ services/<name>/
 │   ├── filters/           # HttpExceptionFilter → FE error envelope
 │   ├── interceptors/      # ApiResponseInterceptor → FE success envelope
 │   ├── middleware/        # request-id
-│   ├── kafka/
+│   ├── kafka/             # optional producer (ENABLE_KAFKA)
 │   ├── health/
 │   └── infrastructure/
 ├── test/
