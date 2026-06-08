@@ -4,7 +4,7 @@ Use this document for architecture walkthroughs, onboarding, and demos.
 
 **One-liner:** The Next.js app calls **one API gateway** (`:3001`). The gateway applies security, then **proxies by URL path** to internal microservices. Every service returns the **same JSON envelope** to the FE.
 
-Related docs: [architecture.md](architecture.md) · [security.md](security.md) · [fe-api-contract.md](fe-api-contract.md) · [running-services.md](running-services.md) · [port-registry.md](port-registry.md)
+Related docs: [architecture.md](architecture.md) · [security.md](security.md) · [fe-api-contract.md](fe-api-contract.md) · [running-services.md](running-services.md) · [port-registry.md](port-registry.md) · [cto-generation-architecture.md](cto-generation-architecture.md)
 
 ---
 

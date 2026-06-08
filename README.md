@@ -57,8 +57,8 @@ npm install
 npm run dev
 # Or gateway only: npm run dev:gateway
 
-# 4. Create a new internal microservice (includes CRUD at /api/billings)
-npm run new:service -- billing 4002
+# 4. Create a new internal microservice (includes CRUD at /api/auth)
+npm run new:service -- auth 4001
 ```
 
 Each `new:service` run generates: NestJS service + **CRUD module** + migration + gateway proxy + port registry entry. See [docs/crud-boilerplate.md](docs/crud-boilerplate.md).

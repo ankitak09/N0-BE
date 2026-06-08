@@ -1,0 +1,33 @@
+.home h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+}
+
+.home p {
+  margin: 0 0 1.5rem;
+  color: #52525b;
+}
+
+.home-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: #18181b;
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #fff;
+  color: #18181b;
+  border: 1px solid #d4d4d8;
+}

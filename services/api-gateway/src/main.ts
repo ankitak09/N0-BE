@@ -6,15 +6,15 @@ import { registerGatewayAuth } from "./proxy/gateway-auth.middleware";
 import { registerProxies } from "./proxy/register-proxies";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bodyParser: false });
   const config = app.get(ConfigService);
 
   const serviceName = config.get<string>("SERVICE_NAME") ?? "n0-api-gateway";
-  configureHttpApp(app, { serviceName, serviceSlug: "gateway" });
+  configureHttpApp(app, { serviceName, serviceSlug: "gateway", skipBodyParser: true });
 
-  await app.init();
   registerGatewayAuth(app);
   registerProxies(app);
+  await app.init();
 
   const port = Number(config.get<string>("PORT") ?? 3001);
   await app.listen(port);

@@ -2,6 +2,7 @@ import { HttpStatus, INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { NextFunction, Response } from "express";
+import { corsHeadersForBrowser } from "../infrastructure/platform-http";
 import { apiError } from "../common/api-error";
 import { ErrorCode } from "../common/errors";
 import { RequestWithId } from "../middleware/request-id.middleware";
@@ -33,30 +34,59 @@ const PUBLIC_AUTH_POST = new Set([
   "/api/auth/oauth/exchange",
 ]);
 
+function isDemoWorkspaceRoute(path: string): boolean {
+  return process.env.ENABLE_DEMO_AUTH_BYPASS === "true" && path.startsWith("/api/workspaces");
+}
+
 function isPublicRoute(method: string, path: string): boolean {
+  if (isDemoWorkspaceRoute(path)) {
+    return true;
+  }
   if (PUBLIC_ROUTES.some((r) => r.method === method && r.pattern.test(path))) {
     return true;
   }
   return method === "POST" && PUBLIC_AUTH_POST.has(path);
 }
 
+function jsonWithCors(
+  res: Response,
+  config: ConfigService,
+  req: GatewayRequest,
+  status: number,
+  body: unknown,
+): void {
+  const origin = typeof req.headers.origin === "string" ? req.headers.origin : undefined;
+  for (const [key, value] of Object.entries(corsHeadersForBrowser(origin, config))) {
+    res.setHeader(key, value);
+  }
+  res.setHeader("cross-origin-resource-policy", "cross-origin");
+  res.status(status).json(body);
+}
+
 export function registerGatewayAuth(app: INestApplication) {
   const jwt = app.get(JwtService);
   const config = app.get(ConfigService);
-  const server = app.getHttpAdapter().getInstance();
 
-  server.use((req: GatewayRequest, res: Response, next: NextFunction) => {
+  app.use((req: GatewayRequest, res: Response, next: NextFunction) => {
     const path = req.path ?? req.url.split("?")[0];
 
     if (isPublicRoute(req.method, path) || !path.startsWith("/api/")) {
+      if (isDemoWorkspaceRoute(path)) {
+        req.userId = "user_demo";
+        req.email = "demo@n0.local";
+      }
       return next();
     }
 
     const header = req.headers.authorization;
     if (!header?.startsWith("Bearer ")) {
-      return res
-        .status(HttpStatus.UNAUTHORIZED)
-        .json(apiError(ErrorCode.UNAUTHORIZED, "Bearer token required", req.requestId));
+      return jsonWithCors(
+        res,
+        config,
+        req,
+        HttpStatus.UNAUTHORIZED,
+        apiError(ErrorCode.UNAUTHORIZED, "Bearer token required", req.requestId),
+      );
     }
 
     try {
@@ -67,9 +97,13 @@ export function registerGatewayAuth(app: INestApplication) {
       req.email = payload.email;
       return next();
     } catch {
-      return res
-        .status(HttpStatus.UNAUTHORIZED)
-        .json(apiError(ErrorCode.UNAUTHORIZED, "Invalid or expired access token", req.requestId));
+      return jsonWithCors(
+        res,
+        config,
+        req,
+        HttpStatus.UNAUTHORIZED,
+        apiError(ErrorCode.UNAUTHORIZED, "Invalid or expired access token", req.requestId),
+      );
     }
   });
 }

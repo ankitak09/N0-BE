@@ -1,7 +1,7 @@
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { json, urlencoded } from "express";
-import helmet from "helmet";
+import { applyPlatformCors, applyPlatformSecurity } from "./platform-http";
 import { HttpExceptionFilter } from "../filters/http-exception.filter";
 import { ApiResponseInterceptor } from "../interceptors/api-response.interceptor";
 import { requestIdMiddleware } from "../middleware/request-id.middleware";
@@ -10,28 +10,27 @@ import { setupSwagger } from "./swagger";
 export interface BootstrapOptions {
   serviceName: string;
   serviceSlug: string;
+  /** Gateway proxies must not parse bodies — upstream services read the raw stream. */
+  skipBodyParser?: boolean;
 }
 
 export function configureHttpApp(app: INestApplication, options: BootstrapOptions) {
   const config = app.get(ConfigService);
 
-  app.use(helmet());
+  applyPlatformSecurity(app);
   app.use(requestIdMiddleware);
 
-  const bodyLimit = config.get<string>("BODY_LIMIT") ?? "1mb";
-  app.use(json({ limit: bodyLimit }));
-  app.use(urlencoded({ extended: true, limit: bodyLimit }));
+  if (!options.skipBodyParser) {
+    const bodyLimit = config.get<string>("BODY_LIMIT") ?? "1mb";
+    app.use(json({ limit: bodyLimit }));
+    app.use(urlencoded({ extended: true, limit: bodyLimit }));
+  }
 
   if (config.get("TRUST_PROXY") === "true") {
     app.getHttpAdapter().getInstance().set("trust proxy", 1);
   }
 
-  const corsOrigin = config.get<string>("CORS_ORIGIN") ?? "http://localhost:3000";
-  app.enableCors({
-    origin: corsOrigin.split(",").map((o) => o.trim()),
-    credentials: true,
-    exposedHeaders: ["x-request-id"],
-  });
+  applyPlatformCors(app, config);
 
   app.setGlobalPrefix("api");
   app.useGlobalPipes(

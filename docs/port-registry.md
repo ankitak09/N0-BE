@@ -6,10 +6,9 @@ Reserve ports here before running `npm run new:service`.
 |------|---------|---------------|-------|
 | 3001 | n0-api-gateway | `N0-platform-be/services/api-gateway` | **Public** — FE entry, proxies internally |
 | 4000 | n0-auth-service | `NO-auth-api/services/auth-service` | Authentication (internal) |
-| 4001 | n0-project-service | `NO-auth-api/services/project-service` | Workspaces, folders, projects |
+| 4001 | n0-project-service | `N0-BE/services/project-service` | Workspaces, AI orchestration |
+| 4003 | n0-ai-service | `N0-BE/services/ai-service` | Internal generation (`/api/internal/v1/*`) |
 | 4099 | n0-example-service | `N0-platform-be/services/example-service` | Scaffold demo (optional) |
-| 4002 | *available* | `N0-platform-be/services/*` | Next new service |
-| 4003 | *available* | | |
 | 4004 | *available* | | |
 | 5434 | PostgreSQL | docker | Host port → container 5432 |
 | 9092 | Kafka | docker | PLAINTEXT localhost |

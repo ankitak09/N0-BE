@@ -7,5 +7,6 @@ dist
 *.log
 .DS_Store
 coverage
+services/ai-service/generated
 docs/openapi.json
 docs/openapi.yaml

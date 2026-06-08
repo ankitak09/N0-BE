@@ -1,0 +1,67 @@
+openapi: 3.0.0
+paths:
+  /api/health:
+    get:
+      operationId: HealthController_health
+      parameters: []
+      responses:
+        "200":
+          description: Service is running
+      summary: Liveness check
+      tags: &a1
+        - Health
+  /api/ready:
+    get:
+      operationId: HealthController_ready
+      parameters: []
+      responses:
+        "200":
+          description: Service is ready to accept traffic
+      summary: Readiness check
+      tags: *a1
+  /api/internal/v1/generate-web-app:
+    post:
+      operationId: GenerationController_generateWebApp
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateWebAppDto"
+      responses:
+        "201":
+          description: Success
+      tags: &a2
+        - generation
+  /api/internal/v1/generation/{jobId}:
+    get:
+      operationId: GenerationController_getGenerationStatus
+      parameters:
+        - name: jobId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags: *a2
+info:
+  title: n0-ai-service
+  description: N0 ai API
+  version: "1.0"
+tags: []
+servers:
+  - url: http://localhost:4003
+    description: Local development
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    GenerateWebAppDto:
+      type: object
+      properties: {}

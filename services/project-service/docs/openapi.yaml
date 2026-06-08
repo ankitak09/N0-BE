@@ -1,0 +1,268 @@
+openapi: 3.0.0
+paths:
+  /api/health:
+    get:
+      operationId: HealthController_health
+      parameters: []
+      responses:
+        "200":
+          description: Service is running
+      summary: Liveness check
+      tags: &a1
+        - Health
+  /api/ready:
+    get:
+      operationId: HealthController_ready
+      parameters: []
+      responses:
+        "200":
+          description: Service is ready to accept traffic
+      summary: Readiness check
+      tags: *a1
+  /api/workspaces/current:
+    get:
+      operationId: WorkspacesController_getCurrentWorkspace
+      parameters: []
+      responses:
+        "200":
+          description: Success
+      tags: &a2
+        - workspaces
+  /api/workspaces/{workspaceId}/folders/tree:
+    get:
+      operationId: WorkspacesController_getFolderTree
+      parameters:
+        - name: workspaceId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags: *a2
+  /api/workspaces/{workspaceId}/folders:
+    get:
+      operationId: WorkspacesController_listFolders
+      parameters:
+        - name: workspaceId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: parentFolderId
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags: *a2
+  /api/workspaces/{workspaceId}/projects/unfoldered:
+    get:
+      operationId: WorkspacesController_listUnfolderedProjects
+      parameters:
+        - name: workspaceId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags: *a2
+  /api/workspaces/{workspaceId}/projects:
+    get:
+      operationId: WorkspacesController_listProjects
+      parameters:
+        - name: workspaceId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: folderId
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags: *a2
+    post:
+      operationId: WorkspacesController_createProject
+      parameters:
+        - name: workspaceId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectDto"
+      responses:
+        "201":
+          description: Success
+      tags: *a2
+  /api/workspaces/{workspaceId}/projects/{projectId}/generation:
+    post:
+      operationId: WorkspacesController_regenerateProject
+      parameters:
+        - name: workspaceId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: projectId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegenerateProjectDto"
+      responses:
+        "201":
+          description: Success
+      tags: *a2
+    get:
+      operationId: WorkspacesController_getGeneration
+      parameters:
+        - name: workspaceId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: projectId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags: *a2
+  /api/workspaces/{workspaceId}/projects/{projectId}/screens:
+    get:
+      operationId: WorkspacesController_getProjectScreens
+      parameters:
+        - name: workspaceId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: projectId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags: *a2
+  /api/workspaces/{workspaceId}/projects/{projectId}/files:
+    get:
+      operationId: WorkspacesController_getProjectFiles
+      parameters:
+        - name: workspaceId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: projectId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags: *a2
+  /api/workspaces/{workspaceId}/projects/{projectId}/files/content:
+    get:
+      operationId: WorkspacesController_getProjectFileContent
+      parameters:
+        - name: workspaceId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: projectId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: path
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags: *a2
+  /api/workspaces/{workspaceId}/projects/{projectId}:
+    get:
+      operationId: WorkspacesController_getProject
+      parameters:
+        - name: workspaceId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: projectId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags: *a2
+  /api/workspaces/{workspaceId}/projects/{projectId}/generation/stream:
+    get:
+      operationId: GenerationStreamController_streamGeneration
+      parameters:
+        - name: workspaceId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: projectId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+      tags:
+        - workspaces
+info:
+  title: n0-project-service
+  description: N0 project API
+  version: "1.0"
+tags: []
+servers:
+  - url: http://localhost:4001
+    description: Local development
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    CreateProjectDto:
+      type: object
+      properties: {}
+    RegenerateProjectDto:
+      type: object
+      properties: {}

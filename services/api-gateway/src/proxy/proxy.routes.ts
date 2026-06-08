@@ -11,4 +11,5 @@ export interface ProxyRoute {
  */
 export const PROXY_ROUTES: ProxyRoute[] = [
   { path: "/api/auth", targetEnv: "AUTH_SERVICE_URL" },
+  { path: "/api/workspaces", targetEnv: "PROJECT_SERVICE_URL" },
 ];
